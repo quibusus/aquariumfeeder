@@ -45,13 +45,35 @@ void handleFeed()
   servo1.detach();
 }
 
+void handleShake()
+{
+
+  String message = "OK\n\n";
+  server.send(200, "text/plain", message);
+
+  servo1.attach(15);
+  for (int i = 0; i < 10; i++)
+  {
+    servo1.write(50);
+    delay(100);
+    servo1.write(100);
+    delay(100);
+  }
+  delay(100);
+  servo1.write(50);
+  delay(1000);
+  servo1.detach();
+}
+
 void setup()
 {
   WiFi.begin(ssid, password);
+  WiFi.softAPdisconnect(true);
 
   server.on("/", handleRoot);
   server.on("/state", handleState);
   server.on("/feed", handleFeed);
+  server.on("/shake", handleShake);
 
   server.onNotFound(handleNotFound);
   server.begin();
